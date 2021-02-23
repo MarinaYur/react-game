@@ -13,28 +13,9 @@
   margin: 20px auto 20px auto;
 }
 
-.image1 {
-  background-image: url(./images/1.jpeg);
-}
-
-/* .block-1 {
-  
-  background-color: red;
-}
-
-.block-2 {
-  background-color: white;
-}
-
-.block-3 {
-  
-  background-color: red;
-} */
-
 .block>* {
   width: 250px;
   height: 300px;
-  /* background-color: yellow; */
   margin: 0 20px 0 20px;
   border: 2px solid yellow;
 }
@@ -45,28 +26,31 @@
   background-position: center;
 }
 
-.image1 {
+.image0 {
+  background-color: tomato;
+}
+
+.image1, .image12 {
   background-image: url(./images/1.jpeg);
 }
-.image2 {
+.image2, .image22{
   background-image: url(./images/2.jpeg);
 }
-.image3 {
+.image3, .image32{
   background-image: url(./images/3.jpeg);
 }
  
-.image4 {
+.image4, .image42{
   background-image: url(./images/4.jpeg);
 }
-.image5 {
+.image5, .image52{
   background-image: url(./images/5.jpeg);
 }
  
-.image6 {
+.image6, .image62{
   background-image: url(./images/6.jpeg);
 }
   
 .image7 {
   background-image: url(./images/7.jpeg);
 }
- 
