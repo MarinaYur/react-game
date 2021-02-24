@@ -9,7 +9,7 @@
 .block {
   display: flex;
   justify-content: center;
-  max-width: 1000px;
+  max-width: 90%;
   text-align: center;
   margin: 20px auto 20px auto;
 }
@@ -59,8 +59,8 @@
 }
 
 .customization {
-  width: 35%;
-  padding-bottom: 20px;
+  width: 60%;
+  padding-bottom: 3.5rem;
 }
 
 .button-start {
@@ -72,23 +72,32 @@
 }
 
 button {
+  font-size: 1rem;
   background-color: yellow;
   border: 2px solid tomato;
   border-radius: 10px;
+  margin: 0 5px 0 5px;
+}
+
+.customization_title {
+  text-align: center;
+}
+
+.settings {
+  display: flex;
+  justify-content: space-between;
 }
 
 .customization p {
   font-size: 25px;
   color: rgb(82, 10, 150);
-  text-align: center;
   margin: 0px 0 14px 0;
 }
 
-.timer-game {
+.timer-game, .settings p {
   font-size: 1.5rem;
   font-weight: 700;
-  width: 70%;
-  height: 104px;
+  height: 2.5rem;
   border-radius: 4px;
 }
 
@@ -97,20 +106,23 @@ button {
   padding-left: 4px;
 }
 
-.timer-game button {
-  width: 30%;
-  height: 40px;
+.timer-game span {
+  color: black;
+}
+
+.customization button {
+  height: 46px;
 }
 
 .clicked-timer {
-  font-size: large;
+  font-size: 1.5rem;
   color: tomato;
   font-weight: 500;
 }
 
 .block>* {
-  width: 250px;
-  height: 300px;
+  width: 15%;
+  height: 230px;
   margin: 0 20px 0 20px;
   border: 2px solid yellow;
 }
@@ -148,6 +160,14 @@ button {
   background-image: url(./images/6.jpeg);
 }
   
-.image7 {
+.image7, .image72 {
   background-image: url(./images/7.jpeg);
+}
+
+.image8, .image82 {
+  background-image: url(./images/8.jpeg);
+}
+
+.image9, .image92 {
+  background-image: url(./images/9.jpeg);
 }
