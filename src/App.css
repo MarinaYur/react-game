@@ -1,8 +1,9 @@
 .App {
+  position: relative;
   max-width: 1500px;
-  background-color: green;
+  background-color: rgba(21, 126, 7, 0.61);
   margin: 0 auto;
-  padding: 30px 0 30px 0;
+  padding: 20px 0 30px 0;
 }
 
 .block {
@@ -11,6 +12,100 @@
   max-width: 1000px;
   text-align: center;
   margin: 20px auto 20px auto;
+}
+
+.popap-to-start {
+  font-size: 1.5rem;
+  color: rgb(82, 10, 150);
+  font-weight: 800;
+  line-height: 101px;
+  position: absolute;
+  top: 32%;
+  left: 33%;
+  max-width: 50%;
+  height: 101px;
+  border: 2px solid rgb(82, 10, 150);;
+  background: white;
+  opacity: 90%;
+  border-radius: 10px;
+  padding: 0 15px 0 15px;
+  z-index: 2;
+}
+.disappearance {
+  animation-name: myAnimation;
+  animation-duration: 1000ms;
+  animation-fill-mode: forwards;
+}
+
+@keyframes myAnimation {
+  100%{
+      display: none;
+      opacity: 0;
+      transform: rotateX(360deg);
+  }
+}
+.not-available:hover {
+  border-width: 12px;
+  border-radius: 14px;
+  transition-duration: 0,8s;
+  transform: rotate3d(1, 1, 1, 12deg);
+}
+
+.app-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin: 0 auto;
+}
+
+.customization {
+  width: 35%;
+  padding-bottom: 20px;
+}
+
+.button-start {
+  margin-top: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  width: 10%;
+  height: 50px;
+}
+
+button {
+  background-color: yellow;
+  border: 2px solid tomato;
+  border-radius: 10px;
+}
+
+.customization p {
+  font-size: 25px;
+  color: rgb(82, 10, 150);
+  text-align: center;
+  margin: 0px 0 14px 0;
+}
+
+.timer-game {
+  font-size: 1.5rem;
+  font-weight: 700;
+  width: 70%;
+  height: 104px;
+  border-radius: 4px;
+}
+
+.timer-game p {
+  line-height: 34px;
+  padding-left: 4px;
+}
+
+.timer-game button {
+  width: 30%;
+  height: 40px;
+}
+
+.clicked-timer {
+  font-size: large;
+  color: tomato;
+  font-weight: 500;
 }
 
 .block>* {
@@ -24,6 +119,8 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+
+  transition-property: border-width, border-radius;
 }
 
 .image0 {
