@@ -1,0 +1,17 @@
+.sound-control {
+    display: flex;
+    padding-top: 8px;
+}
+
+#audio-music, #audio-sound {
+    display: none;
+  }
+
+  .sound-control__music {
+      padding-right: 8px;
+  }
+
+  .sound-control__Off {
+      font-size: 1.3rem;
+      color: red;
+  }

@@ -1,9 +1,10 @@
 .App {
   position: relative;
   max-width: 1500px;
+  min-height: 758px;
   background-color: rgba(21, 126, 7, 0.61);
   margin: 0 auto;
-  padding: 20px 0 30px 0;
+  padding: 0px 0 10px 0;
 }
 
 .block {
@@ -24,7 +25,7 @@
   left: 33%;
   max-width: 50%;
   height: 101px;
-  border: 2px solid rgb(82, 10, 150);;
+  border: 2px solid rgb(82, 10, 150);
   background: white;
   opacity: 90%;
   border-radius: 10px;
@@ -60,15 +61,29 @@
 
 .customization {
   width: 60%;
-  padding-bottom: 3.5rem;
+  padding-bottom: 2.5rem;
 }
 
-.button-start {
-  margin-top: 50px;
+.game-buttons {
+  width: 15%;
+  padding-top: 2rem;
+}
+
+.button-start, .button-finish {
+  margin-top: 1rem;
   font-size: 1rem;
   font-weight: 700;
-  width: 10%;
+  width: 65%;
   height: 50px;
+}
+
+.fullscreen {
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  height: 50px;
+  border-radius: 20%;
+  background-color: tomato;
 }
 
 button {
@@ -77,6 +92,11 @@ button {
   border: 2px solid tomato;
   border-radius: 10px;
   margin: 0 5px 0 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  border: 2px solid black;
 }
 
 .customization_title {
@@ -88,13 +108,14 @@ button {
   justify-content: space-between;
 }
 
-.customization p {
+.customization_title {
   font-size: 25px;
   color: rgb(82, 10, 150);
   margin: 0px 0 14px 0;
 }
 
-.timer-game, .settings p {
+.timer-game, .customization__settings {
+  color: rgb(82, 10, 150);
   font-size: 1.5rem;
   font-weight: 700;
   height: 2.5rem;
@@ -111,7 +132,7 @@ button {
 }
 
 .customization button {
-  height: 46px;
+  min-height: 4vh;
 }
 
 .clicked-timer {
@@ -120,10 +141,12 @@ button {
   font-weight: 500;
 }
 
+
+
 .block>* {
   width: 15%;
-  height: 230px;
-  margin: 0 20px 0 20px;
+  height: 17vh;
+  margin: 0 1rem 0 1rem;
   border: 2px solid yellow;
 }
 .image {
@@ -170,4 +193,22 @@ button {
 
 .image9, .image92 {
   background-image: url(./images/9.jpeg);
+}
+
+footer {
+  width: 30%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  bottom: 0px;
+  left: 50px;
+}
+
+.footer__title {
+  margin: 0;
+}
+
+.footer__logo {
+  width: 60px;
 }

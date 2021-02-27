@@ -1,21 +1,28 @@
 import React from 'react';
 import './App.css';
-let timer = () => {};
+import logo from './images/logo.svg';
+import SoundsMusic from './SoundsMusic';
+// import mozart from './mozart.mp3';
+
+// import SoundsMusic from './SoundsMusic';
+
+let timer = () => { };
 class App extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.twoOpenedValue = []; //for accumulating and comparing opened cards
     this.setTimer = 'No timer';
     this.state = {
       cardLimitation: 0, //limitation on opening cards, no more than 2
       imageNumber: [],
-      startGame: 'before start: cards not available',
+      progressGame: 'before start: cards not available',
       remainingTime: 'No timer',
       setNumberOfCards: '12',
       backgroundColor: 'white',
       countPairsOfOpenedCards: 1,  // number of opened card pairs
       popapMessage: 'To start the game, click on the "Start Game"',
     }
+
     this.startGame = this.startGame.bind(this);
     this.timeToRemember = this.timeToRemember.bind(this);
     this.openCloseCards = this.openCloseCards.bind(this);
@@ -24,12 +31,37 @@ class App extends React.Component {
     this.chooseNumberOfCards = this.chooseNumberOfCards.bind(this);
     this.setBackgroundColor = this.setBackgroundColor.bind(this);
     this.hideExtraCards = this.hideExtraCards.bind(this);
+    this.finishGame = this.finishGame.bind(this);
+    this.fullscreen = this.fullscreen.bind(this);
+    // this.soundsMusic = this.soundsMusic.bind(this);
   }
 
+  // soundsMusic (e) {
+
+  //   const audio = document.getElementById('audio');
+  //   // const range = e.target;
+  //   // audio.volume = audio.volume + 1;
+  //   // console.log(audio);
+  //     if (e.target.value === e.target.min){
+  //       audio.pause();
+  //     } else if(e.target.value === e.target.max){
+  //       audio.play();
+  //     }
+  // }
+
+  fullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+  // fullScreen(html);
+
+
   //сhoose timer settings
-  chooseTimer (e) {
-    console.log('this.state.startGame', this.state.startGame);
-    if (this.state.startGame === 'before start: cards not available') {
+  chooseTimer(e) {
+    if (this.state.progressGame === 'before start: cards not available') {
       this.setTimer = e.target.getAttribute('data');
       this.setState({
         remainingTime: e.target.getAttribute('data')
@@ -38,20 +70,19 @@ class App extends React.Component {
   }
 
   //сhoose settings number of cards
-  chooseNumberOfCards (e) {
-    if (this.state.startGame === 'before start: cards not available') {
-      this.setState({setNumberOfCards: e.target.getAttribute('data')});
+  chooseNumberOfCards(e) {
+    if (this.state.progressGame === 'before start: cards not available') {
+      this.setState({ setNumberOfCards: e.target.getAttribute('data') });
     }
   }
 
-  setBackgroundColor (e) {
-    console.log('this.state.startGame', this.state.startGame);
-    if (this.state.startGame === 'before start: cards not available') {
-      this.setState({backgroundColor: e.target.getAttribute('data')});
+  setBackgroundColor(e) {
+    console.log('this.state.progressGame', this.state.progressGame);
+    if (this.state.progressGame === 'before start: cards not available') {
+      this.setState({ backgroundColor: e.target.getAttribute('data') });
       e.target.closest('.App').style.background = this.state.backgroundColor;
     }
   }
-
 
   //user sees which timer button is pressed
   isActiveButton(buttonId) {
@@ -67,22 +98,22 @@ class App extends React.Component {
   isActiveButtonColor(buttonId) {
     return this.state.backgroundColor === buttonId ? 'clicked-timer' : '';
   }
-  
+
   //remove extra cards if option 12 is selected instead of 18
-  hideExtraCards () {
+  hideExtraCards() {
     return {
       display: this.state.setNumberOfCards === '12' ? 'none' : 'flex'
     }
   };
 
   //timer setting
-  timerOfGame (e) {
-    if (this.state.remainingTime === 'No timer'){
+  timerOfGame(e) {
+    if (this.state.remainingTime === 'No timer') {
       return;
     }
     clearInterval(timer);
     timer = setInterval(() => {
-      if(!this.state.remainingTime) {
+      if (!this.state.remainingTime) {
         clearInterval(timer);
         return false;
       }
@@ -92,12 +123,25 @@ class App extends React.Component {
     }, 1000)
   }
 
+  finishGame() {
+    this.setState({
+      cardLimitation: 0, //limitation on opening cards, no more than 2
+      imageNumber: [],
+      progressGame: 'before start: cards not available',
+      remainingTime: 'No timer',
+      setNumberOfCards: '12',
+      backgroundColor: 'white',
+      countPairsOfOpenedCards: 1,  // number of opened card pairs
+      popapMessage: 'To start the game, click on the "Start Game"',
+    })
+  }
+
   // the layout of the cards when you click the "Start game" button
-  startGame (e) {
-    if (this.state.startGame !== 'user is playing') {
+  startGame(e) {
+    if (this.state.progressGame !== 'user is playing') {
       let arrayOfImageNumber = [];
       let number = this.state.setNumberOfCards;
-      for (let k = 1; k <= number; k++){
+      for (let k = 1; k <= number; k++) {
         arrayOfImageNumber.push(k);
       }
       this.shuffle(arrayOfImageNumber, number);
@@ -106,21 +150,21 @@ class App extends React.Component {
   }
 
   // Fisher-Yates Shuffle
-  shuffle (arrayOfImageNumber, number) {
+  shuffle(arrayOfImageNumber, number) {
     for (let i = arrayOfImageNumber.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
       [arrayOfImageNumber[i], arrayOfImageNumber[j]] = [arrayOfImageNumber[j], arrayOfImageNumber[i]];
-      arrayOfImageNumber[i] = arrayOfImageNumber[i] > number/2 ? arrayOfImageNumber.length + 1 - arrayOfImageNumber[i] : arrayOfImageNumber[i];
+      arrayOfImageNumber[i] = arrayOfImageNumber[i] > number / 2 ? arrayOfImageNumber.length + 1 - arrayOfImageNumber[i] : arrayOfImageNumber[i];
     }
-    arrayOfImageNumber[0] = arrayOfImageNumber[0] > number/2 ? (arrayOfImageNumber.length + 1 - arrayOfImageNumber[0]) : arrayOfImageNumber[0];
+    arrayOfImageNumber[0] = arrayOfImageNumber[0] > number / 2 ? (arrayOfImageNumber.length + 1 - arrayOfImageNumber[0]) : arrayOfImageNumber[0];
     this.setState({
       imageNumber: arrayOfImageNumber,
-      startGame: 'user is playing',
-      });
+      progressGame: 'user is playing',
+    });
   }
 
-  timeToRemember (arrayOfImageNumber) {
-    setTimeout (() => {
+  timeToRemember(arrayOfImageNumber) {
+    setTimeout(() => {
       for (let i = 0; i < arrayOfImageNumber.length; i++) {
         arrayOfImageNumber[i] = arrayOfImageNumber[i] + 'closed';
       }
@@ -131,9 +175,9 @@ class App extends React.Component {
     }, 4000);
   }
 
-  openCloseCards (e) {
-    if (this.state.remainingTime !==0 || this.state.remainingTime === 'No timer') {
-      if (this.state.startGame === 'user is playing') {
+  openCloseCards(e) {
+    if (this.state.remainingTime !== 0 || this.state.remainingTime === 'No timer') {
+      if (this.state.progressGame === 'user is playing') {
         if (this.state.cardLimitation < 2) {
           let index = e.target.getAttribute('data-index');
           let value = parseInt(this.state.imageNumber[index]);
@@ -146,105 +190,112 @@ class App extends React.Component {
             cardLimitation: this.state.cardLimitation + 1,
           })
           // if two open cards are equal
-            if (this.twoOpenedValue.length === 2 ) {
-              if (this.twoOpenedValue[0] === this.twoOpenedValue[1]) {
-                this.setState({
-                  countPairsOfOpenedCards: this.state.countPairsOfOpenedCards + 1,
-                  cardLimitation: 0,
-                });
-                this.twoOpenedValue = [];
-                if (this.state.countPairsOfOpenedCards === this.state.setNumberOfCards / 2) {
-                  setTimeout(() => 
+          if (this.twoOpenedValue.length === 2) {
+            if (this.twoOpenedValue[0] === this.twoOpenedValue[1]) {
+              this.setState({
+                countPairsOfOpenedCards: this.state.countPairsOfOpenedCards + 1,
+                cardLimitation: 0,
+              });
+              this.twoOpenedValue = [];
+              if (this.state.countPairsOfOpenedCards === this.state.setNumberOfCards / 2) {
+                setTimeout(() =>
                   this.setState({
-                    startGame: 'before start: cards not available',
+                    progressGame: 'before start: cards not available',
                     popapMessage: 'To start the new game, click on the "Start Game"',
                     imageNumber: []
                   }), 3000);
-                  this.setState({
-                    countPairsOfOpenedCards: 1,
-                    startGame: 'before start: cards not available',
-                    popapMessage: 'Excellent. You won',
-                    remainingTime: 'No timer',
-                  })
-                  console.log('this.state.countPairsOfOpenedCards :', this.state.countPairsOfOpenedCards);
-                  console.log('this.state.cardLimitation:', this.state.cardLimitation);
-                  console.log(this.state.imageNumber);
+                this.setState({
+                  countPairsOfOpenedCards: 1,
+                  progressGame: 'before start: cards not available',
+                  popapMessage: 'Excellent. You won',
+                  remainingTime: 'No timer',
+                })
+                console.log('this.state.countPairsOfOpenedCards :', this.state.countPairsOfOpenedCards);
+                console.log('this.state.cardLimitation:', this.state.cardLimitation);
+                console.log(this.state.imageNumber);
                 console.log(this.state.countPairsOfOpenedCards);
-                }
-              } else {
-                  // if two open cards are NOT equal, you need to hide them again
-                  setTimeout (() => {
-                    for (let imageNumber in this.state.imageNumber) {
-                      const valueImageNumber = this.state.imageNumber[imageNumber];
-                      this.setState({
-                        imageNumber: {
-                          ...this.state.imageNumber,
-                          [imageNumber]: valueImageNumber === this.twoOpenedValue[0] || valueImageNumber === this.twoOpenedValue[1] ? this.state.imageNumber[imageNumber] + 'closed' : this.state.imageNumber[imageNumber]
-                        },
-                        cardLimitation: 0,
-                      })
-                    }
-                    this.twoOpenedValue = [];
-                  }, 2000);
-                }
-            }
-          } 
-        }
-    } else 
-    if (this.state.remainingTime === 0) {
-      this.setState({
-        startGame: 'before start: cards not available',
-        popapMessage: 'Unfortunately, you did not meet the deadline',
-        countPairsOfOpenedCards: 1,
-      })
-      setTimeout(() => 
+              }
+            } else {
+              // if two open cards are NOT equal, you need to hide them again
+              setTimeout(() => {
+                for (let imageNumber in this.state.imageNumber) {
+                  const valueImageNumber = this.state.imageNumber[imageNumber];
                   this.setState({
-                    popapMessage: 'But you can try again, click on the "Start Game"',
-                    imageNumber: [],
-                    remainingTime: this.setTimer,
-                  }), 3000);
-    }
+                    imageNumber: {
+                      ...this.state.imageNumber,
+                      [imageNumber]: valueImageNumber === this.twoOpenedValue[0] || valueImageNumber === this.twoOpenedValue[1] ? this.state.imageNumber[imageNumber] + 'closed' : this.state.imageNumber[imageNumber]
+                    },
+                    cardLimitation: 0,
+                  })
+                }
+                this.twoOpenedValue = [];
+              }, 2000);
+            }
+          }
+        }
+      }
+    } else
+      if (this.state.remainingTime === 0) {
+        this.setState({
+          progressGame: 'before start: cards not available',
+          popapMessage: 'Unfortunately, you did not meet the deadline',
+          countPairsOfOpenedCards: 1,
+        })
+        setTimeout(() =>
+          this.setState({
+            popapMessage: 'But you can try again, click on the "Start Game"',
+            imageNumber: [],
+            remainingTime: this.setTimer,
+          }), 3000);
+      }
   }
 
-  addClassNotAvailable () {
-    return (this.state.startGame === 'before start: cards not available' ? " not-available" : '');
+  addClassNotAvailable() {
+    return (this.state.progressGame === 'before start: cards not available' ? " not-available" : '');
+  }
+
+  clickApp() {
+    const audioSound = document.getElementById('audio-sound');
+    audioSound.volume = audioSound.getAttribute('volume');
+    audioSound.pause();
+    audioSound.load();
+    audioSound.play();
   }
 
   render() {
     return (
-      <div className="App">
+      <div className="App" onClick={this.clickApp}>
         <div className="app-top">
-          <button className="button-start" onClick={this.startGame}>Start game</button>
-          <div className={"popap" + (this.state.startGame !== 'before start: cards not available' ? " disappearance" : "")}>
+          <div className="game-buttons">
+            <button className="fullscreen" onClick={this.fullscreens}>fullscreen</button>
+            <button className="button-start" onClick={this.startGame}>Start game</button>
+            <button className="button-finish" onClick={this.finishGame}>Finish game</button>
+          </div>
+          <div className={"popap" + (this.state.progressGame !== 'before start: cards not available' ? " disappearance" : "")}>
             {this.state.popapMessage}
           </div>
-
-          <div className="popap-finish">
-            <div className="popap-finish__title"></div>
-            <button className="popap-finish__button1">Yes</button>
-            <button className="popap-finish__button2">No</button>
-          </div>
-
           <div className="customization">
-            <p className = "customization_title">Game settings</p>
+
+            <p className="customization_title">Game settings</p>
             <div className="settings">
               <div className="timer-game">
-                <p>Timer: <span>{this.state.remainingTime}</span></p>
+                <p className="customization__settings">Timer: <span>{this.state.remainingTime}</span></p>
                 <button data='No timer' className={this.isActiveButton('No timer')} onClick={this.chooseTimer}>No timer</button>
                 <button data="30" className={this.isActiveButton('30')} onClick={this.chooseTimer}>30 seconds</button>
                 <button data="60" className={this.isActiveButton('60')} onClick={this.chooseTimer}>60 seconds</button>
+              </div>
+              <div>
+                <p className="customization__settings">Number of cards</p>
+                <button data="12" className={this.isActiveButtonNumber('12')} onClick={this.chooseNumberOfCards}>12</button>
+                <button data="18" className={this.isActiveButtonNumber('18')} onClick={this.chooseNumberOfCards}>18</button>
+              </div>
+              <div>
+                <p className="customization__settings">Background color</p>
+                <button data="white" className={this.isActiveButtonColor('white')} onClick={this.setBackgroundColor}>Green</button>
+                <button data="rgba(21, 126, 7, 0.61)" className={this.isActiveButtonColor('rgba(21, 126, 7, 0.61)')} onClick={this.setBackgroundColor}>White</button>
+              </div>
             </div>
-            <div>
-              <p>Number of cards</p>
-              <button data="12" className={this.isActiveButtonNumber('12')} onClick={this.chooseNumberOfCards}>12</button>
-              <button data="18" className={this.isActiveButtonNumber('18')} onClick={this.chooseNumberOfCards}>18</button>
-            </div>
-            <div>
-              <p>Background color</p>
-              <button data="white" className={this.isActiveButtonColor('white')} onClick={this.setBackgroundColor}>Green</button>
-              <button data="rgba(21, 126, 7, 0.61)" className={this.isActiveButtonColor('rgba(21, 126, 7, 0.61)')} onClick={this.setBackgroundColor}>White</button>
-            </div>
-            </div>
+            <SoundsMusic />
           </div>
         </div>
         <div className="block block-1">
@@ -271,7 +322,16 @@ class App extends React.Component {
           <div className={"image image" + this.state.imageNumber[16] + " " + this.addClassNotAvailable()} onClick={this.openCloseCards} data-index="16"></div>
           <div className={"image image" + this.state.imageNumber[17] + " " + this.addClassNotAvailable()} onClick={this.openCloseCards} data-index="17"></div>
         </div>
+        <footer>
+          <p className="footer__title">
+            By <a href="https://github.com/MarinaYur">Marina Yurkevich</a>, 2021
+          </p>
+          <a className="footer__logo" href="https://rs.school/js/">
+            <img src={logo} alt="logo"></img>
+          </a>
+        </footer>
       </div>
+
     );
   }
 }
