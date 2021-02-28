@@ -2,14 +2,14 @@ import React from 'react';
 import './App.css';
 import logo from './images/logo.svg';
 import SoundsMusic from './SoundsMusic';
-// import mozart from './mozart.mp3';
-
-// import SoundsMusic from './SoundsMusic';
+// import Statistics from './Statistics';
 
 let timer = () => { };
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.displayStatistics = 'statistics-list';
+    this.statistics = [];
     this.twoOpenedValue = []; //for accumulating and comparing opened cards
     this.setTimer = 'No timer';
     this.state = {
@@ -21,6 +21,7 @@ class App extends React.Component {
       backgroundColor: 'white',
       countPairsOfOpenedCards: 1,  // number of opened card pairs
       popapMessage: 'To start the game, click on the "Start Game"',
+      classActive: 'statistics-list_none'
     }
 
     this.startGame = this.startGame.bind(this);
@@ -33,21 +34,8 @@ class App extends React.Component {
     this.hideExtraCards = this.hideExtraCards.bind(this);
     this.finishGame = this.finishGame.bind(this);
     this.fullscreen = this.fullscreen.bind(this);
-    // this.soundsMusic = this.soundsMusic.bind(this);
+    this.showStatistics = this.showStatistics.bind(this);
   }
-
-  // soundsMusic (e) {
-
-  //   const audio = document.getElementById('audio');
-  //   // const range = e.target;
-  //   // audio.volume = audio.volume + 1;
-  //   // console.log(audio);
-  //     if (e.target.value === e.target.min){
-  //       audio.pause();
-  //     } else if(e.target.value === e.target.max){
-  //       audio.play();
-  //     }
-  // }
 
   fullscreen() {
     if (!document.fullscreenElement) {
@@ -56,8 +44,6 @@ class App extends React.Component {
       document.exitFullscreen();
     }
   }
-  // fullScreen(html);
-
 
   //сhoose timer settings
   chooseTimer(e) {
@@ -101,14 +87,29 @@ class App extends React.Component {
 
   //remove extra cards if option 12 is selected instead of 18
   hideExtraCards() {
+
     return {
       display: this.state.setNumberOfCards === '12' ? 'none' : 'flex'
     }
   };
 
+  showStatistics() {
+    if (this.state.classActive === 'statistics-list_none') {
+      this.setState({
+        classActive: 'statistics-list',
+      })
+    } else
+      this.setState({
+        classActive: 'statistics-list_none',
+      })
+  }
+
   //timer setting
   timerOfGame(e) {
     if (this.state.remainingTime === 'No timer') {
+      return;
+    }
+    if (this.state.progressGame === 'user is plaing') {
       return;
     }
     clearInterval(timer);
@@ -124,6 +125,7 @@ class App extends React.Component {
   }
 
   finishGame() {
+    this.setTimer = 'No timer';
     this.setState({
       cardLimitation: 0, //limitation on opening cards, no more than 2
       imageNumber: [],
@@ -134,6 +136,7 @@ class App extends React.Component {
       countPairsOfOpenedCards: 1,  // number of opened card pairs
       popapMessage: 'To start the game, click on the "Start Game"',
     })
+    console.log('this.state.progressGame', this.state.progressGame, this.state.remainingTime);
   }
 
   // the layout of the cards when you click the "Start game" button
@@ -198,22 +201,23 @@ class App extends React.Component {
               });
               this.twoOpenedValue = [];
               if (this.state.countPairsOfOpenedCards === this.state.setNumberOfCards / 2) {
+                this.statistics.push((this.setTimer - this.state.remainingTime) + ' seconds');
+                console.log('statistics', this.statistics);
+                console.log('remainingTime', this.state.remainingTime);
                 setTimeout(() =>
                   this.setState({
                     progressGame: 'before start: cards not available',
                     popapMessage: 'To start the new game, click on the "Start Game"',
-                    imageNumber: []
+                    imageNumber: [],
+                    countPairsOfOpenedCards: 1,
+                    remainingTime: 'this.setTimer',
                   }), 3000);
+
                 this.setState({
-                  countPairsOfOpenedCards: 1,
                   progressGame: 'before start: cards not available',
                   popapMessage: 'Excellent. You won',
-                  remainingTime: 'No timer',
+                  remainingTime: 'this.setTimer',
                 })
-                console.log('this.state.countPairsOfOpenedCards :', this.state.countPairsOfOpenedCards);
-                console.log('this.state.cardLimitation:', this.state.cardLimitation);
-                console.log(this.state.imageNumber);
-                console.log(this.state.countPairsOfOpenedCards);
               }
             } else {
               // if two open cards are NOT equal, you need to hide them again
@@ -236,16 +240,18 @@ class App extends React.Component {
       }
     } else
       if (this.state.remainingTime === 0) {
+        this.statistics.push('losing');
+        console.log('statistics', this.statistics);
         this.setState({
           progressGame: 'before start: cards not available',
           popapMessage: 'Unfortunately, you did not meet the deadline',
-          countPairsOfOpenedCards: 1,
         })
         setTimeout(() =>
           this.setState({
             popapMessage: 'But you can try again, click on the "Start Game"',
             imageNumber: [],
             remainingTime: this.setTimer,
+            countPairsOfOpenedCards: 1,
           }), 3000);
       }
   }
@@ -275,8 +281,28 @@ class App extends React.Component {
             {this.state.popapMessage}
           </div>
           <div className="customization">
-
-            <p className="customization_title">Game settings</p>
+            <div className="customization__top">
+              <p className="customization-score">Score<span>{this.state.countPairsOfOpenedCards - 1}</span></p>
+              <p className="customization_title">Game settings</p>
+              <div className="statistics">
+                <button className="statistics__button" onClick={this.showStatistics}>Statistics</button>
+                <div className={this.state.classActive}>
+                  <ol>
+                    <li>{this.statistics[0]}</li>
+                    <li>{this.statistics[1]}</li>
+                    <li>{this.statistics[2]}</li>
+                    <li>{this.statistics[3]}</li>
+                    <li>{this.statistics[4]}</li>
+                    <li>{this.statistics[5]}</li>
+                    <li>{this.statistics[6]}</li>
+                    <li>{this.statistics[7]}</li>
+                    <li>{this.statistics[8]}</li>
+                    <li>{this.statistics[9]}</li>
+                  </ol>
+                  <div className="statistics-list__close">x</div>
+                </div>
+              </div>
+            </div>
             <div className="settings">
               <div className="timer-game">
                 <p className="customization__settings">Timer: <span>{this.state.remainingTime}</span></p>
@@ -296,6 +322,8 @@ class App extends React.Component {
               </div>
             </div>
             <SoundsMusic />
+
+
           </div>
         </div>
         <div className="block block-1">

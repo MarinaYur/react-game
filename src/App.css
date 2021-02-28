@@ -114,12 +114,19 @@ button:hover {
   margin: 0px 0 14px 0;
 }
 
-.timer-game, .customization__settings {
+.timer-game, .customization__settings, .customization-score {
   color: rgb(82, 10, 150);
   font-size: 1.5rem;
   font-weight: 700;
-  height: 2.5rem;
+  height: 7.5vh;
   border-radius: 4px;
+  margin: 0;
+}
+
+.customization-score span {
+  border: 3px solid black;
+  margin-left: 10px;
+  padding: 1px 3px 1px 3px;
 }
 
 .timer-game p {
@@ -211,4 +218,43 @@ footer {
 
 .footer__logo {
   width: 60px;
+}
+
+.customization__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2vh;
+}
+
+.statistics {
+  font-size: 1.5rem;
+  padding-top: 20px;
+}
+
+.statistics-list {
+  color: blueviolet;
+  font-size: 1.1rem;
+  width: 12%;
+  position: absolute;
+  /* display: none; */
+  display: flex;
+  justify-content: space-between;
+  background-color: cornsilk;
+}
+
+.statistics-list_none {
+  display: none;
+}
+
+.statistics-list__close {
+  width: 10%;
+  height: 3vh;
+  color: red;
+  background-color: cornsilk;
+  border: 1px solid black;
+}
+
+.statistics__button {
+  background-color: cornsilk;
 }

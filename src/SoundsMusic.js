@@ -4,7 +4,7 @@ import sound from './sound.mp3';
 import './SoundsMusic.css';
 import { useState } from "react";
 
-export default function SoundsMusic() {
+export default function SoundsMusic(props) {
   const audioMusic = document.getElementById('audio-music');
   const audioSound = document.getElementById('audio-sound');
   let [volumeSound, setVolume] = useState('0');
@@ -19,12 +19,10 @@ export default function SoundsMusic() {
     }
     if (e.target.value === e.target.min) {
       setMusicOff(musicOff = 'x');
-      console.log(musicOff);
       audioMusic.pause();
     } else if (e.target.value === e.target.max) {
       audioMusic.play();
     }
-
     audioMusic.play();
     audioMusic.volume = e.target.value / 10;
   }
@@ -47,15 +45,17 @@ export default function SoundsMusic() {
   }
 
   return (
-    <div className="sound-control">
-      <audio volume="1" loop id="audio-music" src={birds}></audio>
-      <p className='sound-control__music'>Music<span className="sound-control__Off">{musicOff}</span></p>
-      <input id="range" min="0" max="10" type="range" value={value} name="range" step="1" onClick={handleClick} onChange={(e) => setValue(value = e.target.value)}></input>
+    <div className="sounds-statistic">
+      <div className="sound-control">
+        <audio volume="1" loop id="audio-music" src={birds}></audio>
+        <p className='sound-control__music'>Music<span className="sound-control__Off">{musicOff}</span></p>
+        <input id="range" min="0" max="10" type="range" value={value} name="range" step="1" onClick={handleClick} onChange={(e) => setValue(value = e.target.value)}></input>
 
 
-      <audio id="audio-sound" volume={volumeSound} src={sound}></audio>
-      <p className='sound-control__sound'>Sound<span className="sound-control__Off">{soundOff}</span></p>
-      <input id="range" min="0" max="10" type="range" value={valueSound} name="range" step="1" onInput={(e) => setValueSound(valueSound = e.target.valueSound)} onClick={handleSoundClick} onChange={(e) => setValueSound(valueSound = e.target.valueSound)}></input>
+        <audio id="audio-sound" volume={volumeSound} src={sound}></audio>
+        <p className='sound-control__sound'>Sound<span className="sound-control__Off">{soundOff}</span></p>
+        <input id="range" min="0" max="10" type="range" value={valueSound} name="range" step="1" onInput={(e) => setValueSound(valueSound = e.target.valueSound)} onClick={handleSoundClick} onChange={(e) => setValueSound(valueSound = e.target.valueSound)}></input>
+      </div>
     </div>
   );
 }

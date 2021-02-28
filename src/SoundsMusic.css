@@ -1,6 +1,13 @@
+.sounds-statistic {
+    display: flex;
+    justify-content: space-between;
+}
+
 .sound-control {
+    height: 8vh;
     display: flex;
     padding-top: 8px;
+
 }
 
 #audio-music, #audio-sound {
