@@ -61,7 +61,7 @@
 
 .customization {
   width: 60%;
-  padding-bottom: 2.5rem;
+  padding-bottom: 2.3rem;
 }
 
 .game-buttons {
@@ -114,6 +114,47 @@ button:hover {
   margin: 0px 0 14px 0;
 }
 
+.customization__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2vh;
+}
+
+.statistics {
+  font-size: 1.5rem;
+  padding-top: 20px;
+}
+
+.statistics-list {
+  color: blueviolet;
+  font-size: 1.1rem;
+  width: 12%;
+  position: absolute;
+  /* display: flex;
+  justify-content: space-between; */
+  background-color: cornsilk;
+}
+
+.statistics-list_none {
+  display: none;
+}
+
+.statistics__button {
+  background-color: cornsilk;
+}
+
+.statistics__p {
+  color: black;
+}
+
+.statistics__best {
+  color: red;
+  padding: 0 2px 0 2px;
+  border: 1px solid black;
+  margin-left: 5px;
+}
+
 .timer-game, .customization__settings, .customization-score {
   color: rgb(82, 10, 150);
   font-size: 1.5rem;
@@ -147,8 +188,6 @@ button:hover {
   color: tomato;
   font-weight: 500;
 }
-
-
 
 .block>* {
   width: 15%;
@@ -218,43 +257,4 @@ footer {
 
 .footer__logo {
   width: 60px;
-}
-
-.customization__top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 2vh;
-}
-
-.statistics {
-  font-size: 1.5rem;
-  padding-top: 20px;
-}
-
-.statistics-list {
-  color: blueviolet;
-  font-size: 1.1rem;
-  width: 12%;
-  position: absolute;
-  /* display: none; */
-  display: flex;
-  justify-content: space-between;
-  background-color: cornsilk;
-}
-
-.statistics-list_none {
-  display: none;
-}
-
-.statistics-list__close {
-  width: 10%;
-  height: 3vh;
-  color: red;
-  background-color: cornsilk;
-  border: 1px solid black;
-}
-
-.statistics__button {
-  background-color: cornsilk;
 }

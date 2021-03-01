@@ -6,8 +6,10 @@ import SoundsMusic from './SoundsMusic';
 
 let timer = () => { };
 class App extends React.Component {
+  userData;
   constructor(props) {
     super(props);
+    this.theBestResult = 0;
     this.displayStatistics = 'statistics-list';
     this.statistics = [];
     this.twoOpenedValue = []; //for accumulating and comparing opened cards
@@ -35,7 +37,16 @@ class App extends React.Component {
     this.finishGame = this.finishGame.bind(this);
     this.fullscreen = this.fullscreen.bind(this);
     this.showStatistics = this.showStatistics.bind(this);
+
   }
+
+
+
+  componentWillUpdate(nextProps, nextState) {
+    localStorage.setItem('userState', JSON.stringify(nextState));
+    localStorage.setItem('userProps', JSON.stringify(nextProps));
+}
+
 
   fullscreen() {
     if (!document.fullscreenElement) {
@@ -109,7 +120,7 @@ class App extends React.Component {
     if (this.state.remainingTime === 'No timer') {
       return;
     }
-    if (this.state.progressGame === 'user is plaing') {
+    if (this.state.progressGame === 'before start: cards not available') {
       return;
     }
     clearInterval(timer);
@@ -130,7 +141,7 @@ class App extends React.Component {
       cardLimitation: 0, //limitation on opening cards, no more than 2
       imageNumber: [],
       progressGame: 'before start: cards not available',
-      remainingTime: 'No timer',
+      remainingTime: this.setTimer,
       setNumberOfCards: '12',
       backgroundColor: 'white',
       countPairsOfOpenedCards: 1,  // number of opened card pairs
@@ -201,22 +212,25 @@ class App extends React.Component {
               });
               this.twoOpenedValue = [];
               if (this.state.countPairsOfOpenedCards === this.state.setNumberOfCards / 2) {
-                this.statistics.push((this.setTimer - this.state.remainingTime) + ' seconds');
-                console.log('statistics', this.statistics);
-                console.log('remainingTime', this.state.remainingTime);
+                this.statistics.push((this.setTimer - this.state.remainingTime));
+                if (this.statistics.length > 10) {
+                  this.statistics.shift();
+                }
+                this.theBestResult = Math.min(...(this.statistics.filter(item => typeof item === 'number')));
+                this.setTimer = 'No timer';
                 setTimeout(() =>
                   this.setState({
                     progressGame: 'before start: cards not available',
                     popapMessage: 'To start the new game, click on the "Start Game"',
                     imageNumber: [],
                     countPairsOfOpenedCards: 1,
-                    remainingTime: 'this.setTimer',
+                    remainingTime: 'No timer',
                   }), 3000);
 
                 this.setState({
                   progressGame: 'before start: cards not available',
                   popapMessage: 'Excellent. You won',
-                  remainingTime: 'this.setTimer',
+                  remainingTime: this.setTimer,
                 })
               }
             } else {
@@ -240,9 +254,14 @@ class App extends React.Component {
       }
     } else
       if (this.state.remainingTime === 0) {
+        console.log('remainingTime losing', this.state.remainingTime);
         this.statistics.push('losing');
-        console.log('statistics', this.statistics);
+        if (this.statistics.length > 10) {
+          this.statistics.shift();
+        }
+        this.setTimer = 'No timer';
         this.setState({
+          remainingTime: 'No timer',
           progressGame: 'before start: cards not available',
           popapMessage: 'Unfortunately, you did not meet the deadline',
         })
@@ -250,7 +269,6 @@ class App extends React.Component {
           this.setState({
             popapMessage: 'But you can try again, click on the "Start Game"',
             imageNumber: [],
-            remainingTime: this.setTimer,
             countPairsOfOpenedCards: 1,
           }), 3000);
       }
@@ -287,6 +305,7 @@ class App extends React.Component {
               <div className="statistics">
                 <button className="statistics__button" onClick={this.showStatistics}>Statistics</button>
                 <div className={this.state.classActive}>
+                  <p className="statistics__p">The best<span className="statistics__best">{this.theBestResult}</span> seconds</p>
                   <ol>
                     <li>{this.statistics[0]}</li>
                     <li>{this.statistics[1]}</li>
@@ -299,7 +318,6 @@ class App extends React.Component {
                     <li>{this.statistics[8]}</li>
                     <li>{this.statistics[9]}</li>
                   </ol>
-                  <div className="statistics-list__close">x</div>
                 </div>
               </div>
             </div>
