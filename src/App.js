@@ -4,11 +4,12 @@ import logo from './images/logo.svg';
 import SoundsMusic from './SoundsMusic';
 // import Statistics from './Statistics';
 
-let timer = () => { };
+
 class App extends React.Component {
-  userData;
+  userState;
   constructor(props) {
     super(props);
+    this.timer = () => { };
     this.theBestResult = 0;
     this.displayStatistics = 'statistics-list';
     this.statistics = [];
@@ -20,7 +21,7 @@ class App extends React.Component {
       progressGame: 'before start: cards not available',
       remainingTime: 'No timer',
       setNumberOfCards: '12',
-      backgroundColor: 'white',
+      backgroundColor: 'rgba(21, 126, 7, 0.61)',
       countPairsOfOpenedCards: 1,  // number of opened card pairs
       popapMessage: 'To start the game, click on the "Start Game"',
       classActive: 'statistics-list_none'
@@ -39,14 +40,68 @@ class App extends React.Component {
     this.showStatistics = this.showStatistics.bind(this);
 
   }
+  componentDidMount() {
+    this.userState = JSON.parse(sessionStorage.getItem('userState'));
+    if (sessionStorage.getItem('userState')) {
+      this.setState({
+        cardLimitation: this.userState.cardLimitation, //limitation on opening cards, no more than 2
+        imageNumber: this.userState.imageNumber,
+        progressGame: this.userState.progressGame,
+        remainingTime: this.userState.remainingTime,
+        setNumberOfCards: this.userState.setNumberOfCards,
+        backgroundColor: this.userState.backgroundColor,
+        countPairsOfOpenedCards: this.userState.countPairsOfOpenedCards,  // number of opened card pairs
+        popapMessage: this.userState.popapMessage,
+        classActive: this.userState.classActive
+      })
+
+    } else {
+      this.setState({
+        cardLimitation: 0, //limitation on opening cards, no more than 2
+        imageNumber: [],
+        progressGame: 'before start: cards not available',
+        remainingTime: 'No timer',
+        setNumberOfCards: '12',
+        backgroundColor: 'rgba(21, 126, 7, 0.61)',
+        countPairsOfOpenedCards: 1,  // number of opened card pairs
+        popapMessage: 'To start the game, click on the "Start Game"',
+        classActive: 'statistics-list_none'
+      })
+    }
+    if (sessionStorage.getItem('theBestResult')) {
+      this.theBestResult = sessionStorage.getItem('theBestResult');
+    }
+    if (sessionStorage.getItem('timer')) {
+      this.timer = sessionStorage.getItem('timer');
+    }
+    if (sessionStorage.getItem('displayStatistics')) {
+      this.displayStatistics = sessionStorage.getItem('displayStatistics');
+    }
+    if (sessionStorage.getItem('twoOpenedValue')) {
+      this.twoOpenedValue = sessionStorage.getItem('twoOpenedValue').split(',');
+    }
+
+    if (sessionStorage.getItem('setTimer')) {
+      this.setTimer = sessionStorage.getItem('setTimer');
+    }
+
+    if (sessionStorage.getItem('statistics')) {
+      this.statistics = sessionStorage.getItem('statistics').split(',');
+    }
+  }
 
 
-
-  componentWillUpdate(nextProps, nextState) {
-    localStorage.setItem('userState', JSON.stringify(nextState));
-    localStorage.setItem('userProps', JSON.stringify(nextProps));
-}
-
+  componentDidUpdate(nextProps, nextState) {
+    this.timerOfGame();
+    sessionStorage.setItem('userState', JSON.stringify(nextState));
+    sessionStorage.setItem('userProps', JSON.stringify(nextProps));
+    sessionStorage.setItem('theBestResult', this.theBestResult);
+    sessionStorage.setItem('displayStatistics', this.displayStatistics);
+    sessionStorage.setItem('statistics', this.statistics);
+    sessionStorage.setItem('twoOpenedValue', this.twoOpenedValue);
+    sessionStorage.setItem('setTimer', this.setTimer);
+    sessionStorage.setItem('timer', this.timer);
+  }
 
   fullscreen() {
     if (!document.fullscreenElement) {
@@ -77,8 +132,9 @@ class App extends React.Component {
     console.log('this.state.progressGame', this.state.progressGame);
     if (this.state.progressGame === 'before start: cards not available') {
       this.setState({ backgroundColor: e.target.getAttribute('data') });
-      e.target.closest('.App').style.background = this.state.backgroundColor;
+
     }
+    e.target.closest('.App').style.background = this.state.backgroundColor;
   }
 
   //user sees which timer button is pressed
@@ -98,7 +154,6 @@ class App extends React.Component {
 
   //remove extra cards if option 12 is selected instead of 18
   hideExtraCards() {
-
     return {
       display: this.state.setNumberOfCards === '12' ? 'none' : 'flex'
     }
@@ -123,10 +178,10 @@ class App extends React.Component {
     if (this.state.progressGame === 'before start: cards not available') {
       return;
     }
-    clearInterval(timer);
-    timer = setInterval(() => {
+    clearInterval(this.timer);
+    this.timer = setInterval(() => {
       if (!this.state.remainingTime) {
-        clearInterval(timer);
+        clearInterval(this.timer);
         return false;
       }
       this.setState({
@@ -143,11 +198,10 @@ class App extends React.Component {
       progressGame: 'before start: cards not available',
       remainingTime: this.setTimer,
       setNumberOfCards: '12',
-      backgroundColor: 'white',
+      backgroundColor: 'rgba(21, 126, 7, 0.61)',
       countPairsOfOpenedCards: 1,  // number of opened card pairs
       popapMessage: 'To start the game, click on the "Start Game"',
     })
-    console.log('this.state.progressGame', this.state.progressGame, this.state.remainingTime);
   }
 
   // the layout of the cards when you click the "Start game" button
@@ -192,6 +246,9 @@ class App extends React.Component {
   openCloseCards(e) {
     if (this.state.remainingTime !== 0 || this.state.remainingTime === 'No timer') {
       if (this.state.progressGame === 'user is playing') {
+        if (this.state.cardLimitation === 0) {
+          this.twoOpenedValue = [];
+        }
         if (this.state.cardLimitation < 2) {
           let index = e.target.getAttribute('data-index');
           let value = parseInt(this.state.imageNumber[index]);
@@ -206,11 +263,12 @@ class App extends React.Component {
           // if two open cards are equal
           if (this.twoOpenedValue.length === 2) {
             if (this.twoOpenedValue[0] === this.twoOpenedValue[1]) {
+              this.twoOpenedValue = [];
               this.setState({
                 countPairsOfOpenedCards: this.state.countPairsOfOpenedCards + 1,
                 cardLimitation: 0,
               });
-              this.twoOpenedValue = [];
+
               if (this.state.countPairsOfOpenedCards === this.state.setNumberOfCards / 2) {
                 this.statistics.push((this.setTimer - this.state.remainingTime));
                 if (this.statistics.length > 10) {
@@ -238,6 +296,7 @@ class App extends React.Component {
               setTimeout(() => {
                 for (let imageNumber in this.state.imageNumber) {
                   const valueImageNumber = this.state.imageNumber[imageNumber];
+
                   this.setState({
                     imageNumber: {
                       ...this.state.imageNumber,
@@ -246,32 +305,33 @@ class App extends React.Component {
                     cardLimitation: 0,
                   })
                 }
+                console.log('должно удалиться')
                 this.twoOpenedValue = [];
-              }, 2000);
+              }, 500);
             }
           }
         }
       }
-    } else
-      if (this.state.remainingTime === 0) {
-        console.log('remainingTime losing', this.state.remainingTime);
-        this.statistics.push('losing');
-        if (this.statistics.length > 10) {
-          this.statistics.shift();
-        }
-        this.setTimer = 'No timer';
-        this.setState({
-          remainingTime: 'No timer',
-          progressGame: 'before start: cards not available',
-          popapMessage: 'Unfortunately, you did not meet the deadline',
-        })
-        setTimeout(() =>
-          this.setState({
-            popapMessage: 'But you can try again, click on the "Start Game"',
-            imageNumber: [],
-            countPairsOfOpenedCards: 1,
-          }), 3000);
+    } else if (this.state.remainingTime === 0) {
+      console.log('remainingTime losing', this.state.remainingTime);
+      this.statistics.push('losing');
+      if (this.statistics.length > 10) {
+        this.statistics.shift();
       }
+      this.theBestResult = Math.min(...(this.statistics.filter(item => typeof item === 'number')));
+      this.setTimer = 'No timer';
+      this.setState({
+        remainingTime: 'No timer',
+        progressGame: 'before start: cards not available',
+        popapMessage: 'Unfortunately, you did not meet the deadline',
+      })
+      setTimeout(() =>
+        this.setState({
+          popapMessage: 'But you can try again, click on the "Start Game"',
+          imageNumber: [],
+          countPairsOfOpenedCards: 1,
+        }), 3000);
+    }
   }
 
   addClassNotAvailable() {
@@ -288,10 +348,10 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App" onClick={this.clickApp}>
+      <div className="App" style={{ background: this.state.backgroundColor }} onClick={this.clickApp}>
         <div className="app-top">
           <div className="game-buttons">
-            <button className="fullscreen" onClick={this.fullscreens}>fullscreen</button>
+            <button className="fullscreen" onClick={this.fullscreen}>fullscreen</button>
             <button className="button-start" onClick={this.startGame}>Start game</button>
             <button className="button-finish" onClick={this.finishGame}>Finish game</button>
           </div>
@@ -335,13 +395,12 @@ class App extends React.Component {
               </div>
               <div>
                 <p className="customization__settings">Background color</p>
-                <button data="white" className={this.isActiveButtonColor('white')} onClick={this.setBackgroundColor}>Green</button>
-                <button data="rgba(21, 126, 7, 0.61)" className={this.isActiveButtonColor('rgba(21, 126, 7, 0.61)')} onClick={this.setBackgroundColor}>White</button>
+                <button data="rgba(21, 126, 7, 0.61)" className={this.isActiveButtonColor('rgba(21, 126, 7, 0.61)')} onClick={this.setBackgroundColor}>Green</button>
+
+                <button data="white" className={this.isActiveButtonColor('white')} onClick={this.setBackgroundColor}>White</button>
               </div>
             </div>
             <SoundsMusic />
-
-
           </div>
         </div>
         <div className="block block-1">
@@ -377,7 +436,6 @@ class App extends React.Component {
           </a>
         </footer>
       </div>
-
     );
   }
 }

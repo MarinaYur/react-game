@@ -2,7 +2,7 @@
   position: relative;
   max-width: 1500px;
   min-height: 758px;
-  background-color: rgba(21, 126, 7, 0.61);
+  /* background-color: rgba(21, 126, 7, 0.61); */
   margin: 0 auto;
   padding: 0px 0 10px 0;
 }
@@ -21,7 +21,7 @@
   font-weight: 800;
   line-height: 101px;
   position: absolute;
-  top: 32%;
+  top: 45%;
   left: 33%;
   max-width: 50%;
   height: 101px;
