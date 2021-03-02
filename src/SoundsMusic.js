@@ -4,11 +4,11 @@ import sound from './sound.mp3';
 import './SoundsMusic.css';
 import { useState, useEffect } from "react";
 
-export default function SoundsMusic(props) {
+export default function SoundsMusic() {
   const audioMusic = document.getElementById('audio-music');
   const audioSound = document.getElementById('audio-sound');
   let [volumeSound, setVolume] = useState('0');
-  let [valueMusic, setValueMusic] = useState('0');
+  let [valueMusic, setValueMusic] = useState(0);
   let [valueSound, setValueSound] = useState('0');
   let [musicOff, setMusicOff] = useState('x');
   let [soundOff, setSoundOff] = useState('x');
@@ -48,7 +48,7 @@ export default function SoundsMusic(props) {
     const dataMusicSoundSaved = JSON.parse(sessionStorage.getItem('dataMusicSound'));
     if (dataMusicSoundSaved) {
       setVolume(dataMusicSoundSaved.volumeSound);
-      setValueMusic(dataMusicSoundSaved.value);
+      setValueMusic(dataMusicSoundSaved.valueMusic);
       setValueSound(dataMusicSoundSaved.valueSound);
       setMusicOff(dataMusicSoundSaved.musicOff);
       setSoundOff(dataMusicSoundSaved.soundOff);
@@ -56,14 +56,20 @@ export default function SoundsMusic(props) {
   }, []);
 
   useEffect(() => {
-    const valuesToSave = { volumeSound, value: valueMusic, valueSound, musicOff, soundOff };
+    const valuesToSave = {
+      volumeSound,
+      valueMusic,
+      valueSound,
+      musicOff,
+      soundOff 
+    };
     sessionStorage.setItem('dataMusicSound', JSON.stringify(valuesToSave));
   })
 
   return (
     <div className="sounds-statistic">
       <div className="sound-control">
-        <audio volume="" loop id="audio-music" src={birds}></audio>
+        <audio volume={valueMusic / 10} loop id="audio-music" src={birds}></audio>
         <p className='sound-control__music'>Music<span className="sound-control__Off">{musicOff}</span></p>
         <input id="range" min="0" max="10" type="range" value={valueMusic} name="range" step="1" onLoad={handleMusicClick} onClick={handleMusicClick} onChange={(e) => setValueMusic(valueMusic = e.target.value)}></input>
 
