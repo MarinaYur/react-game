@@ -2,8 +2,6 @@ import React from 'react';
 import './App.css';
 import logo from './images/logo.svg';
 import SoundsMusic from './SoundsMusic';
-// import Statistics from './Statistics';
-
 
 class App extends React.Component {
   userState;
@@ -89,7 +87,6 @@ class App extends React.Component {
       this.statistics = sessionStorage.getItem('statistics').split(',');
     }
   }
-
 
   componentDidUpdate(nextProps, nextState) {
     this.timerOfGame();
